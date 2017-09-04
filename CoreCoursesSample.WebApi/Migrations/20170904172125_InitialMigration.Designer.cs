@@ -11,8 +11,8 @@ using System;
 namespace CoreCoursesSample.WebApi.Migrations
 {
     [DbContext(typeof(CoursesDbContext))]
-    [Migration("20170904143315_initialMigration")]
-    partial class initialMigration
+    [Migration("20170904172125_InitialMigration")]
+    partial class InitialMigration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -32,7 +32,7 @@ namespace CoreCoursesSample.WebApi.Migrations
 
                     b.HasKey("ID");
 
-                    b.ToTable("Course");
+                    b.ToTable("Courses");
                 });
 #pragma warning restore 612, 618
         }

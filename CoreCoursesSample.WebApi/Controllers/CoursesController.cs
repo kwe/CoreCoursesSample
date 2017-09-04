@@ -21,6 +21,9 @@ namespace CoreCoursesSample.WebApi.Controllers
 
         // Get: api/Courses
         [HttpGet]
-        public IEnumerable<Course> GetCourses() => (_context.Courses);
+        public IEnumerable<Course> GetCourses()
+        {
+            return _context.Courses;
+        }
     }
 }

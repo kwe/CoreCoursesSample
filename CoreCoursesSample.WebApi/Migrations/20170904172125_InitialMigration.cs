@@ -5,12 +5,12 @@ using System.Collections.Generic;
 
 namespace CoreCoursesSample.WebApi.Migrations
 {
-    public partial class initialMigration : Migration
+    public partial class InitialMigration : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "Course",
+                name: "Courses",
                 columns: table => new
                 {
                     ID = table.Column<int>(type: "int4", nullable: false)
@@ -20,14 +20,14 @@ namespace CoreCoursesSample.WebApi.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Course", x => x.ID);
+                    table.PrimaryKey("PK_Courses", x => x.ID);
                 });
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "Course");
+                name: "Courses");
         }
     }
 }
