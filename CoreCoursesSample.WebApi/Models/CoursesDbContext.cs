@@ -10,6 +10,6 @@ namespace CoreCoursesSample.WebApi.Models
         {
 
         }
-        public DbSet<Course> Course { get; set;}
+        public DbSet<Course> Courses { get; set;}
     }
 }

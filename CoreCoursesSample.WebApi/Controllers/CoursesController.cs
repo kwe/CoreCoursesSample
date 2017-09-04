@@ -1,8 +1,10 @@
-
-
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using CoreCoursesSample.WebApi.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+
 
 namespace CoreCoursesSample.WebApi.Controllers
 {
@@ -10,12 +12,15 @@ namespace CoreCoursesSample.WebApi.Controllers
     [Route("api/Courses")]
     public class CoursesController : Controller
     {
+        private readonly CoursesDbContext _context;
+
+        public CoursesController(CoursesDbContext context)
+        {
+            _context = context;
+        }
 
         // Get: api/Courses
         [HttpGet]
-        public IEnumerable<Course> GetCourses()
-        {
-            return (new List<Course>());
-        }
+        public IEnumerable<Course> GetCourses() => (_context.Courses);
     }
 }

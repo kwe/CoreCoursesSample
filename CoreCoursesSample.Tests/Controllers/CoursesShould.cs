@@ -14,11 +14,22 @@ namespace CoreCoursesSample.Tests
         [Fact]
         public void ReturnCourses()
         {
-            var sut = new CoursesController();
-            var result = sut.GetCourses();
+            var options = new DbContextOptionsBuilder<CoursesDbContext>()
+                .UseInMemoryDatabase(databaseName: "CoursesMEM")
+                .Options;
 
-            Assert.IsType<List<Course>>(result);
-                        
+            using (var context = new CoursesDbContext(options))
+            {
+                context.Courses.Add(new Course { Title = "Test Course"});
+                context.Courses.Add(new Course { Title = "Another Silly Course"});
+                context.SaveChanges();
+            }
+            using (var context = new CoursesDbContext(options))
+            {
+                var sut = new CoursesController(context);
+                var result = sut.GetCourses();
+                Assert.Equal(2, result.Count());
+            }
         }
     }
 }
