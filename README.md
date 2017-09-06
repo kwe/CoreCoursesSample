@@ -14,6 +14,7 @@ will start the database
 
 then create and migrate the database
 
+    dotnet restore
     dotnet ef database update
 
 ## To run tests
