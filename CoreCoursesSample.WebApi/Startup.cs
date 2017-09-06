@@ -9,6 +9,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using CoreCoursesSample.WebApi.Models;
+using Swashbuckle.AspNetCore.Swagger;
 
 namespace CoreCoursesSample.WebApi
 {
@@ -26,7 +27,10 @@ namespace CoreCoursesSample.WebApi
             services.AddMvc();
             services.AddDbContext<CoursesDbContext>(options => 
                 options.UseNpgsql(Configuration["Database:Connection"]));
-
+            services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new Info { Title = "Courses API", Version = "v1" });
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -36,6 +40,14 @@ namespace CoreCoursesSample.WebApi
             {
                 app.UseDeveloperExceptionPage();
             }
+            
+            app.UseSwagger();
+
+            // Enable middleware to serve swagger-ui (HTML, JS, CSS, etc.), specifying the Swagger JSON endpoint.
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "Course Api V1");
+            });
 
             app.UseMvc();            
 
