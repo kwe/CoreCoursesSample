@@ -5,18 +5,20 @@ using CoreCoursesSample.WebApi.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Threading.Tasks;
+using CoreCoursesSample.WebApi.Repository;
+
 
 namespace CoreCoursesSample.WebApi.Controllers
 {
     [Produces("application/json")]
-    [Route("api/Courses")]
+    [Route("api/courses")]
     public class CoursesController : Controller
     {
-        private readonly CoursesDbContext _context;
+        ICoursesRepository _coursesRepository;
 
-        public CoursesController(CoursesDbContext context)
+        public CoursesController(ICoursesRepository coursesRepository)
         {
-            _context = context;
+            _coursesRepository = coursesRepository;
         }
 
         // Get: api/Courses
@@ -28,7 +30,7 @@ namespace CoreCoursesSample.WebApi.Controllers
         {
             try
             {
-                var courses = await _context.Courses.ToListAsync();
+                var courses = await _coursesRepository.GetCoursesAsync();
                 return Ok(courses);
             }
             catch
