@@ -18,7 +18,7 @@ namespace CoreCoursesSample.WebApi.Repository
 
         public async Task<Course> GetCourseAsync(int id)
         {
-            return await _context.Courses.SingleOrDefaultAsync( c => c.ID == id);
+            return await _context.Courses.SingleOrDefaultAsync ( c => c.ID == id);
         }
 
         public async Task<List<Course>> GetCoursesAsync()

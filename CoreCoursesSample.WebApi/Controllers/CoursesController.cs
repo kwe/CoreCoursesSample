@@ -26,7 +26,7 @@ namespace CoreCoursesSample.WebApi.Controllers
         [ProducesResponseType(typeof(List<Course>), 200)]
         [ProducesResponseType(typeof(BadRequestResult), 400)]
 
-        public async Task<ActionResult> Courses()
+        public async Task<ActionResult> GetCourses()
         {
             try
             {
@@ -36,6 +36,28 @@ namespace CoreCoursesSample.WebApi.Controllers
             catch
             {
                 return BadRequest();
+            }
+        }
+
+        // GET api/course/5
+        [HttpGet("{id}", Name = "GetCourseRoute")]
+        [ProducesResponseType(typeof(Course), 200)]
+        [ProducesResponseType(typeof(BadRequestResult), 400)]
+
+        public async Task<ActionResult> GetCourse(int id)
+        {
+            try
+            {
+                var course = await _coursesRepository.GetCourseAsync(id);
+                if (course == null)
+                {
+                    return NotFound();
+                }
+                return Ok(course);
+            }
+            catch
+            {
+                return NotFound();
             }
         }
     }
