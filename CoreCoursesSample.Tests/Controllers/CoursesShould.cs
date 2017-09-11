@@ -6,13 +6,15 @@ using CoreCoursesSample.WebApi.Controllers;
 using Microsoft.EntityFrameworkCore;
 using CoreCoursesSample.WebApi.Models;
 using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
 
 namespace CoreCoursesSample.Tests
 {
     public class CoursesShould
     {
         [Fact]
-        public void ReturnCourses()
+        public async Task ReturnCourses()
         {
             var options = new DbContextOptionsBuilder<CoursesDbContext>()
                 .UseInMemoryDatabase(databaseName: "CoursesMEM")
@@ -27,8 +29,13 @@ namespace CoreCoursesSample.Tests
             using (var context = new CoursesDbContext(options))
             {
                 var sut = new CoursesController(context);
-                var result = sut.GetCourses();
-                Assert.Equal(2, result.Count());
+                var result = await sut.Courses();
+                Assert.IsType<OkObjectResult>(result);
+
+                var them = result as OkObjectResult;
+                var courses = them.Value as List<Course>;
+
+                Assert.Equal(courses.Count, 2);
             }
         }
     }

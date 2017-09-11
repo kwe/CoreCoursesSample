@@ -4,7 +4,7 @@ using System.Linq;
 using CoreCoursesSample.WebApi.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-
+using System.Threading.Tasks;
 
 namespace CoreCoursesSample.WebApi.Controllers
 {
@@ -21,9 +21,20 @@ namespace CoreCoursesSample.WebApi.Controllers
 
         // Get: api/Courses
         [HttpGet]
-        public IEnumerable<Course> GetCourses()
+        [ProducesResponseType(typeof(List<Course>), 200)]
+        [ProducesResponseType(typeof(BadRequestResult), 400)]
+
+        public async Task<ActionResult> Courses()
         {
-            return _context.Courses;
+            try
+            {
+                var courses = await _context.Courses.ToListAsync();
+                return Ok(courses);
+            }
+            catch
+            {
+                return BadRequest();
+            }
         }
     }
 }
