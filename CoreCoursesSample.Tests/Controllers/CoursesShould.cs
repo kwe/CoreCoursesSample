@@ -35,7 +35,7 @@ namespace CoreCoursesSample.Tests
                 var them = result as OkObjectResult;
                 var courses = them.Value as List<Course>;
 
-                Assert.Equal(courses.Count, 2);
+                Assert.Equal(2,courses.Count);
             }
         }
     }
