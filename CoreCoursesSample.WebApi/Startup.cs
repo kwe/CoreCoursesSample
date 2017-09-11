@@ -9,6 +9,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using CoreCoursesSample.WebApi.Models;
+using CoreCoursesSample.WebApi.Repository;
 using Swashbuckle.AspNetCore.Swagger;
 
 namespace CoreCoursesSample.WebApi
@@ -27,6 +28,9 @@ namespace CoreCoursesSample.WebApi
             services.AddMvc();
             services.AddDbContext<CoursesDbContext>(options => 
                 options.UseNpgsql(Configuration["Database:Connection"]));
+
+            services.AddScoped<ICoursesRepository, CoursesRepository>(); 
+
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new Info { Title = "Courses API", Version = "v1" });
