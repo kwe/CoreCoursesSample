@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using CoreCoursesSample.WebApi.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using Microsoft.EntityFrameworkCore;
 using System.Threading.Tasks;
 using CoreCoursesSample.WebApi.Repository;
@@ -15,10 +16,13 @@ namespace CoreCoursesSample.WebApi.Controllers
     public class CoursesController : Controller
     {
         ICoursesRepository _coursesRepository;
+        ILogger _Logger;
 
-        public CoursesController(ICoursesRepository coursesRepository)
+        public CoursesController(ICoursesRepository coursesRepository, ILoggerFactory loggerFactory)
         {
             _coursesRepository = coursesRepository;
+            _Logger = loggerFactory.CreateLogger(nameof(CoursesController));
+
         }
 
         // Get: api/Courses
@@ -33,8 +37,9 @@ namespace CoreCoursesSample.WebApi.Controllers
                 var courses = await _coursesRepository.GetCoursesAsync();
                 return Ok(courses);
             }
-            catch
+            catch (Exception exp)
             {
+                _Logger.LogError(exp.Message);
                 return BadRequest();
             }
         }
@@ -42,7 +47,7 @@ namespace CoreCoursesSample.WebApi.Controllers
         // GET api/course/5
         [HttpGet("{id}", Name = "GetCourseRoute")]
         [ProducesResponseType(typeof(Course), 200)]
-        [ProducesResponseType(typeof(BadRequestResult), 400)]
+        [ProducesResponseType(typeof(BadRequestResult), 404)]
 
         public async Task<ActionResult> GetCourse(int id)
         {
@@ -55,10 +60,22 @@ namespace CoreCoursesSample.WebApi.Controllers
                 }
                 return Ok(course);
             }
-            catch
+            catch (Exception exp)
             {
+                _Logger.LogError(exp.Message);
                 return NotFound();
             }
         }
+
+        // POST api/course
+        //[HttpPost]
+
+        //public async Task<ActionResult> CreateCourse([FromBody]Course course)
+        //{
+
+
+        //}
+        
+
     }
 }
