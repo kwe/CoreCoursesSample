@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Mvc;
 using Moq;
 using Microsoft.Extensions.Configuration;
 using CoreCoursesSample.WebApi.Repository;
+using Microsoft.Extensions.Logging;
 
 namespace CoreCoursesSample.Tests
 {
@@ -22,6 +23,9 @@ namespace CoreCoursesSample.Tests
         [Fact]
         public async Task ReturnCourses()
         {
+            var loggerMock = new Mock<ILoggerFactory>();
+            var logger = loggerMock.Object;
+
             var repo = new Mock<ICoursesRepository>();
             _courses = new List<Course>();
 
@@ -32,7 +36,7 @@ namespace CoreCoursesSample.Tests
 
             repo.Setup(c => c.GetCoursesAsync()).ReturnsAsync(_courses);
 
-            var sut = new CoursesController(repo.Object);
+            var sut = new CoursesController(repo.Object, logger);
             var result = await sut.GetCourses();
             Assert.IsType<OkObjectResult>(result);
 
@@ -45,12 +49,15 @@ namespace CoreCoursesSample.Tests
         [Fact]
         public async Task ReturnsCourseByID()
         {
+            var loggerMock = new Mock<ILoggerFactory>();
+            var logger = loggerMock.Object;
+
             var repo = new Mock<ICoursesRepository>();
             _course = new Course { ID = 1, NumberOfStudents = 100, Title = "Biology" };
 
             repo.Setup(c => c.GetCourseAsync(1)).ReturnsAsync(_course);
 
-            var sut = new CoursesController(repo.Object);
+            var sut = new CoursesController(repo.Object, logger);
             var result = await sut.GetCourse(1);
 
             Assert.IsType<OkObjectResult>(result);
@@ -60,12 +67,15 @@ namespace CoreCoursesSample.Tests
         [Fact]
         public async Task ReturnsNotFound()
         {
+            var loggerMock = new Mock<ILoggerFactory>();
+            var logger = loggerMock.Object;
+
             var repo = new Mock<ICoursesRepository>();
 
             // Mock a null course for any int passed
             repo.Setup(c => c.GetCourseAsync(It.IsAny<int>())).Returns(Task.FromResult<Course>(null));
 
-            var sut = new CoursesController(repo.Object);
+            var sut = new CoursesController(repo.Object, logger);
             var result = await sut.GetCourse(1);
 
             Assert.IsType<NotFoundResult>(result);
