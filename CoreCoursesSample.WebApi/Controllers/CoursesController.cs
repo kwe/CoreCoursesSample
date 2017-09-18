@@ -68,13 +68,35 @@ namespace CoreCoursesSample.WebApi.Controllers
         }
 
         // POST api/course
-        //[HttpPost]
+        [HttpPost]
+        [ProducesResponseType(typeof(ApiResponse), 201)]
+        [ProducesResponseType(typeof(ApiResponse), 400)]
 
-        //public async Task<ActionResult> CreateCourse([FromBody]Course course)
-        //{
+        public async Task<ActionResult> CreateCourse([FromBody]Course course)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(new ApiResponse { Status = false, ModelState = ModelState });
+            }
 
+            try
+            {
+                var newCourse = await _coursesRepository.InsertCourseAsync(course);
+                if (newCourse == null)
+                {
+                    return BadRequest(new ApiResponse { Status = false });
+                }
+                return CreatedAtRoute("GetCourseRoute", new { id = newCourse.ID },
+                        new ApiResponse { Status = true, Course = newCourse });
 
-        //}
+            }
+            catch (Exception exp)
+            {
+                _Logger.LogError(exp.Message);
+                return BadRequest(new ApiResponse { Status = false });
+            }
+
+        }
         
 
     }

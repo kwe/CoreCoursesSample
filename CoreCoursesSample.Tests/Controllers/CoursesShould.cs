@@ -81,5 +81,33 @@ namespace CoreCoursesSample.Tests
             Assert.IsType<NotFoundResult>(result);
 
         }
+
+        [Fact]
+        public async Task InsertANewCourse()
+        {
+            var loggerMock = new Mock<ILoggerFactory>();
+            var logger = loggerMock.Object;
+
+            var repo = new Mock<ICoursesRepository>();
+
+            _course = new Course { ID = 1, NumberOfStudents = 100, Title = "A funny Thing Happened..." };
+
+            // Mock a method that pretends to insert a new course
+            var _apiResponse = new ApiResponse { Status = true, Course = _course };
+            repo.Setup(c => c.InsertCourseAsync(_course)).ReturnsAsync(_course);
+
+            var sut = new CoursesController(repo.Object, logger);
+            var result = await sut.CreateCourse(_course);
+
+            Assert.IsType<CreatedAtRouteResult>(result);
+
+            var response = result as CreatedAtRouteResult;
+
+            var returned = response.Value as ApiResponse;
+
+            Assert.IsType<Course>(returned.Course);
+            Assert.Equal(true, returned.Status);
+            
+        }
     }
 }

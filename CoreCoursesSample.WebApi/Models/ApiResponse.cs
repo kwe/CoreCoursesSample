@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Angular_ASPNETCore_CustomersService.Models
+namespace CoreCoursesSample.WebApi.Models
 {
     public class ApiResponse
     {
