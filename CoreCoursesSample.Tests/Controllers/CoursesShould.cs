@@ -12,29 +12,21 @@ using Moq;
 using Microsoft.Extensions.Configuration;
 using CoreCoursesSample.WebApi.Repository;
 using Microsoft.Extensions.Logging;
+using CoreCoursesSample.Tests.Models;
 
 namespace CoreCoursesSample.Tests
 {
     public class CoursesShould
     {
         private Course _course;
-        private List<Course> _courses;
-
         [Fact]
         public async Task ReturnCourses()
         {
             var loggerMock = new Mock<ILoggerFactory>();
             var logger = loggerMock.Object;
 
-            var repo = new Mock<ICoursesRepository>();
-            _courses = new List<Course>();
+            var repo = MockCoursesRepository.GetMockCoursesRepository();
 
-            _course = new Course { ID = 1, NumberOfStudents = 100, Title = "Biology" };
-            _courses.Add(_course);
-            _course = new Course { ID = 2, NumberOfStudents = 65, Title = "Mafs" };
-            _courses.Add(_course);
-
-            repo.Setup(c => c.GetCoursesAsync()).ReturnsAsync(_courses);
 
             var sut = new CoursesController(repo.Object, logger);
             var result = await sut.GetCourses();
@@ -52,10 +44,7 @@ namespace CoreCoursesSample.Tests
             var loggerMock = new Mock<ILoggerFactory>();
             var logger = loggerMock.Object;
 
-            var repo = new Mock<ICoursesRepository>();
-            _course = new Course { ID = 1, NumberOfStudents = 100, Title = "Biology" };
-
-            repo.Setup(c => c.GetCourseAsync(1)).ReturnsAsync(_course);
+            var repo = MockCoursesRepository.GetMockCoursesRepository();
 
             var sut = new CoursesController(repo.Object, logger);
             var result = await sut.GetCourse(1);
@@ -65,36 +54,16 @@ namespace CoreCoursesSample.Tests
         }
 
         [Fact]
-        public async Task ReturnsNotFound()
-        {
-            var loggerMock = new Mock<ILoggerFactory>();
-            var logger = loggerMock.Object;
-
-            var repo = new Mock<ICoursesRepository>();
-
-            // Mock a null course for any int passed
-            repo.Setup(c => c.GetCourseAsync(It.IsAny<int>())).Returns(Task.FromResult<Course>(null));
-
-            var sut = new CoursesController(repo.Object, logger);
-            var result = await sut.GetCourse(1);
-
-            Assert.IsType<NotFoundResult>(result);
-
-        }
-
-        [Fact]
         public async Task InsertANewCourse()
         {
             var loggerMock = new Mock<ILoggerFactory>();
             var logger = loggerMock.Object;
 
-            var repo = new Mock<ICoursesRepository>();
+            var repo = MockCoursesRepository.GetMockCoursesRepository();
 
             _course = new Course { ID = 1, NumberOfStudents = 100, Title = "A funny Thing Happened..." };
 
-            // Mock a method that pretends to insert a new course
             var _apiResponse = new ApiResponse { Status = true, Course = _course };
-            repo.Setup(c => c.InsertCourseAsync(_course)).ReturnsAsync(_course);
 
             var sut = new CoursesController(repo.Object, logger);
             var result = await sut.CreateCourse(_course);

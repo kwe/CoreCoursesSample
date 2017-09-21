@@ -1,10 +1,40 @@
 ﻿using System;
+using Moq;
+using CoreCoursesSample.WebApi.Models;
+using CoreCoursesSample.WebApi.Repository;
+using System.Collections.Generic;
+
 namespace CoreCoursesSample.Tests.Models
 {
-    public class MockCourseRepository
+    public class MockCoursesRepository
     {
-        public MockCourseRepository()
+        public static Mock <ICoursesRepository>GetMockCoursesRepository()
         {
+            List<Course> courses = new List<Course>
+            {
+                new Course
+                {
+                    ID = 1,
+                    Title = "Mafs",
+                    NumberOfStudents = 200
+                },
+                new Course
+                {
+                    ID = 2,
+                    Title = "Biology",
+                    NumberOfStudents = 190
+
+                }
+            };
+
+            var mockCoursesRepository = new Mock<ICoursesRepository>();
+            mockCoursesRepository.Setup(c => c.GetCoursesAsync()).ReturnsAsync(courses);
+            mockCoursesRepository.Setup(c => c.GetCourseAsync(1)).ReturnsAsync(courses[0]);
+            mockCoursesRepository.Setup(c => c.InsertCourseAsync(courses[1])).ReturnsAsync(courses[1]);
+
+
+            return mockCoursesRepository;
+
         }
     }
 }
