@@ -27,10 +27,16 @@ namespace CoreCoursesSample.Tests.Models
                 }
             };
 
+            var course = new Course
+            {
+                ID = 1,
+                Title = "A single course for local people",
+                NumberOfStudents = 344
+            };
             var mockCoursesRepository = new Mock<ICoursesRepository>();
             mockCoursesRepository.Setup(c => c.GetCoursesAsync()).ReturnsAsync(courses);
             mockCoursesRepository.Setup(c => c.GetCourseAsync(1)).ReturnsAsync(courses[0]);
-            mockCoursesRepository.Setup(c => c.InsertCourseAsync(courses[1])).ReturnsAsync(courses[1]);
+            mockCoursesRepository.Setup(c => c.InsertCourseAsync(course)).ReturnsAsync(course);
 
 
             return mockCoursesRepository;
