@@ -126,6 +126,28 @@ namespace CoreCoursesSample.WebApi.Controllers
             }
 
         }
+        // DELETE api/course/5
+        [HttpDelete("{id}")]
+        [ValidateAntiForgeryToken]
+        [ProducesResponseType(typeof(ApiResponse), 200)]
+        [ProducesResponseType(typeof(ApiResponse), 400)]
+        public async Task<ActionResult> DeleteCourse(int id)
+        {
+            try
+            {
+                var status = await _coursesRepository.DeleteCourseAsync(id);
+                if (!status)
+                {
+                    return BadRequest(new ApiResponse { Status = false });
+                }
+                return Ok(new ApiResponse { Status = true });
+            }
+            catch (Exception exp)
+            {
+                _Logger.LogError(exp.Message);
+                return BadRequest(new ApiResponse { Status = false });
+            }
+        }
 
 
 
