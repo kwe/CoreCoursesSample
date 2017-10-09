@@ -36,7 +36,7 @@ namespace CoreCoursesSample.Tests.Models
             var mockCoursesRepository = new Mock<ICoursesRepository>();
             mockCoursesRepository.Setup(c => c.GetCoursesAsync()).ReturnsAsync(courses);
             mockCoursesRepository.Setup(c => c.GetCourseAsync(1)).ReturnsAsync(courses[0]);
-            mockCoursesRepository.Setup(c => c.InsertCourseAsync(course)).ReturnsAsync(course);
+            mockCoursesRepository.Setup(c => c.InsertCourseAsync(It.IsAny<Course>())).ReturnsAsync(course);
 
 
             return mockCoursesRepository;
