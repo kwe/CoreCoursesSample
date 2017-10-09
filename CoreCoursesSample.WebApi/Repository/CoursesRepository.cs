@@ -43,5 +43,37 @@ namespace CoreCoursesSample.WebApi.Repository
 
             return course;
         }
+        public async Task<bool> UpdateCourseAsync(Course course)
+        {
+            _context.Attach(course);
+            _context.Entry(course).State = EntityState.Modified;
+
+            try
+            {
+                return (await _context.SaveChangesAsync() > 0 ? true : false);
+            }
+            catch (Exception exp)
+            {
+                _Logger.LogError($"Error in {nameof(UpdateCourseAsync)}: " + exp.Message);
+            }
+            return false;
+        }
+        public async Task<bool> DeleteCourseAsync(int id)
+        {
+            var course = await _context.Courses
+                    .SingleOrDefaultAsync(c => c.ID == id);
+
+            _context.Remove(course);
+            try
+            {
+                return (await _context.SaveChangesAsync() > 0 ? true : false);
+            }
+
+            catch (System.Exception exp)
+            {
+                _Logger.LogError($"Error in {nameof(DeleteCourseAsync)}: " + exp.Message);
+            }
+            return false;
+        }
     }
 }

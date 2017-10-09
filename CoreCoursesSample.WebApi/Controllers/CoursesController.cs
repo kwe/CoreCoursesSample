@@ -97,7 +97,37 @@ namespace CoreCoursesSample.WebApi.Controllers
             }
 
         }
-        
+        // PUT api/course
+        [HttpPut("{id}")]
+        [ProducesResponseType(typeof(ApiResponse), 200)]
+        [ProducesResponseType(typeof(ApiResponse), 400)]
+
+        public async Task<ActionResult> UpdateCourse(int id, [FromBody]Course course)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(new ApiResponse { Status = false, ModelState = ModelState });
+            }
+            
+            try
+            {
+                var status = await _coursesRepository.UpdateCourseAsync(course);
+                if (!status)
+                {
+                    return BadRequest(new ApiResponse { Status = false });
+                }
+                return Ok(new ApiResponse { Status = true, Course = course });
+
+            }
+            catch (Exception exp)
+            {
+                _Logger.LogError(exp.Message);
+                return BadRequest(new ApiResponse { Status = false });
+            }
+
+        }
+
+
 
     }
 }

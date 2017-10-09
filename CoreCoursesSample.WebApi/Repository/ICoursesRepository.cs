@@ -12,5 +12,7 @@ namespace CoreCoursesSample.WebApi.Repository
         Task<List<Course>> GetCoursesAsync();
         Task<Course> GetCourseAsync(int id);
         Task<Course> InsertCourseAsync(Course course);
+        Task<bool> UpdateCourseAsync(Course course);
+        Task<bool> DeleteCourseAsync(int id);
     }
 }
